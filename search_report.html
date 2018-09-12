@@ -1,0 +1,118 @@
+<!-- 
+<?php
+include("connect.php");
+
+session_start();
+if(!isset($_SESSION["username"]))
+{header("Location:index.html");}
+if(!isset($_SESSION["user_privilege"]))
+{header("Location:index.html");}
+
+if (($_SESSION['user_privilege']=="administrator")) {
+?> -->
+<html>
+<style> 
+h1{ color:#ff6347;}
+#example1 {
+    background-image: url(big-data.jpg);
+   opacity: 1;
+    filter: alpha(opacity=50);
+}
+</style>
+<body>
+<h1 align="center">Daily Report</h1>
+
+
+<form method="post" action="add_akaun.php">
+  <h4>Register User Account:</h4>
+<table>
+<tr><td><label>Username: </label></td><td><input type="text" name="nama"/></td></tr>
+<tr><td><label>Employee Number (unique): </label></td><td><input type="text" name="username"/></td></tr>
+<tr><td><label>Department: </label></td><td>
+<select name="department_name" id="department_name">
+	<?php
+		$sa = "SELECT * FROM tbl_department  ORDER BY department_name ASC";
+		$qa = $pdo->prepare($sa);
+		$qa->execute();
+		
+		while ($ta = $qa->fetch(PDO::FETCH_OBJ)) {
+			echo '<option value="' . $ta->department_name . '">' . $ta->department_name . '</option>';
+		}
+	?>
+</select>
+</td></tr>
+<tr><td><label>Time: </label></td><td>
+<select name="reportime" id="reportime">
+	<?php
+		$sa = "SELECT * FROM tbl_time  ORDER BY reportime ASC";
+		$qa = $pdo->prepare($sa);
+		$qa->execute();
+		
+		while ($ta = $qa->fetch(PDO::FETCH_OBJ)) {
+			echo '<option value="' . $ta->reportime . '">' . $ta->reportime . '</option>';
+		}
+	?>
+</select>
+</td></tr>
+
+<tr><td><label>Date: </label></td><td><input type="date" name="report_date" value="<?php echo date('Y-m-d');?>" ></td>
+<tr><td><label>Remarks: </label></td><td><input type="text" name="report_remarks"></td></tr>
+
+<tr><td><label>Assignation: </label></td><td>
+<select name="assignation_name" id="assignation_name">
+	<?php
+		$sa = "SELECT * FROM tbl_assignation  ORDER BY assignation_name ASC";
+		$qa = $pdo->prepare($sa);
+		$qa->execute();
+		
+		while ($ta = $qa->fetch(PDO::FETCH_OBJ)) {
+			echo '<option value="' . $ta->assignation_name . '">' . $ta->assignation_name . '</option>';
+		}
+	?>
+</select>
+</td></tr>
+
+</table>
+<input name="btnSubmit" type="submit" value="Insert">
+</form>
+ 
+<table width="90%" border="1" bgcolor="#FFFFFF">
+  <tr>
+  <th colspan=8 valign="middle">Update daily Report</th></tr>
+  <tr><td><span class="style1" valign="middle">Time.</span></td>
+    <td><span class="style1" valign="middle">Client</span></td>
+	<td><span class="style1" valign="middle">Job No./Doc No</span></td>
+	<td><span class="style1" valign="middle">Description</span></td>
+	<td><span class="style1" valign="middle">Remarks</span></td>
+	<td><span class="style1" valign="middle">Assignation</span></td>
+	<td><span class="style1" valign="middle">Updated Date</span></td>
+	<td><span class="style1" valign="middle">Update/Delete</span></td>
+  	
+  </tr>
+  
+ 	<?php
+	$t = "SELECT * FROM tbl_report ORDER BY reportime ASC";
+			$q = $pdo->prepare($t);
+			$q->execute();
+			$n = 0;
+			while ($t = $q->fetch(PDO::FETCH_OBJ)) {
+				$n += 1;
+	?>
+		<td align="center" valign="middle"><?php echo $reportime; ?>
+		<td align="left" valign="middle"><?php echo $t->report_client; ?></td>
+		<td align="left" valign="middle"><?php echo $t->report_jobno; ?></td>
+		<td align="left" valign="middle"><?php echo $t->report_description; ?></td>
+		<td align="left" valign="middle"><?php echo $t->report_remarks; ?></td>
+		<td align="left" valign="middle"><?php echo $t->report_assignation; ?></td>
+		<td align="center" valign="middle"><a href="update_akaun.php?id_pengguna=<?php echo $t->id_pengguna; ?>">UPDATE</a></td>
+		<td align="center" valign="middle"><a href="delete_akaun.php?id_pengguna=<?php echo $t->id_pengguna; ?>">DELETE</a></td></tr>
+	 				 
+		<?php
+			$pdo = NULL;
+			}
+		?>
+</table></body>
+</html>
+<!-- <?php
+}
+?> -->

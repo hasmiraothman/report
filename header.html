@@ -1,0 +1,21 @@
+<?php
+session_start();
+if(!isset($_SESSION["nama"]))
+{header("Location:index.html");}
+if(!isset($_SESSION["tahap"]))
+{header("Location:index.html");}
+?>
+
+<html>
+<head>
+<title>Event Handler</title>
+<!-- responsive-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="include/responsive.css">
+</head>
+<Frameset cols="20%, 80%">
+<frame src=header1.php name=left onResize="alert('Wanna resize the window?')">
+<frame src="menu.php" name=right>
+
+</Frameset><noframes></noframes>
+</html>

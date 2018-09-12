@@ -1,0 +1,110 @@
+<?php
+include("connect.php");
+
+session_start();
+if(!isset($_SESSION["nama"]))
+{header("Location:index.html");}
+if(!isset($_SESSION["tahap"]))
+{header("Location:index.html");}
+
+if (($_SESSION['tahap']=="administrator") || ($_SESSION['tahap']=="regular user")) {
+?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset>
+<title>KLCK Website</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<div class="container" style="width:80%;">
+	<h2 align="center">KLCK Website</h2>
+    <?php
+	$query = "SELECT * FROM products ORDER BY id ASC";	
+	$result = mysqli_query($connect, $query);
+	if(mysqli_num_rows($result) > 0)
+	{
+		while($row = mysqli_fetch_array($result))
+		{
+			?>
+            <div class="col-md-4">
+                <form method="post" action="shop.php?action=add&id=<?php echo $row["id"];?>">
+    <div style="border: 1px solid #eaeaec; margin: -1px 19px 3px -1px;  box-shadow: 0 1px 2 px rgba(0,0,0,0.05); padding:10px;" align="center">
+    <img src="<?php echo $row["image"];?>" width="100" height="100"class="img-responsive">
+    <h5 class"text-info"><?php echo $row["p_name"];?></h5>
+    <h5 class"text-danger">RM <?php echo $row["price"];?></h5>
+    <input type="text" name="quantity" class="form-control" value="0">
+    <input type="hidden" name="hidden_name" value="<?php echo $row["p_name"];?>" >
+    <input type="hidden" name="hidden_price" value="<?php echo $row["price"];?>" >   
+    <input type="Submit" name="add" id="btn" class="" value="Add to Cart">
+    </div>
+    </form>
+  </div>
+  <?php
+ 
+  }
+}
+?>
+<div style="clear:both"></div>
+<h2>My KLCK</h2>
+<div class="table-responsive">
+
+<table class="table table-bordered">
+<tr>
+<th width="40%">Product Name</th>
+<th width="15%">Quantity</th>
+<th width="10%">Price Details</th>
+<th width="10%">Order Total</th>
+<th width="10%">Postage</th>
+<th width="5%">Action</th>
+</tr>
+<?php
+if (!empty($_SESSION["id_census"]))
+{
+	foreach($_SESSION["id_census"] as $key => $values)
+	{
+		?>
+        <tr>
+        <td><?php echo $values["item_name"]; ?></td>
+        <td><?php echo $values["item_quantity"] ?></td>
+        <td>RM<?php echo $values["product_price"]; ?></td>
+        <td>RM<?php echo number_format($values["item_quantity"] * $values["product_price"], 2); ?></td>
+         <td>RM<?php echo number_format($values["item_quantity"] * 8, 2); ?></td>
+      <td><a href="shop.php?action=delete&id=<?php echo $values["product_id"]; ?>"><span class="text-danger">X</span></a></td></tr>
+        <?php
+		$total = $total + ($values["item_quantity"] * $values["product_price"]);
+		
+		$total_post = $total_post + ($values["item_quantity"] * 8);
+		
+		$total_all = $total_post + $total;
+	}
+	?>
+    <tr>
+    <td colspan="3" align="right"> Sub-Total</td>
+    <td align="right">RM<?php echo number_format($total, 2); ?></td>
+    <td></td>
+    </tr>
+    <tr>
+    <td colspan="3" align="right"> Shipping Rate</td>
+    <td align="right">RM<?php echo number_format($total_post, 2); 0?></td>
+    <td></td>
+    </tr>
+    <tr>
+    <td colspan="3" align="right"> Total</td>
+    <td align="right">RM<?php echo number_format($total_all, 2); 0?></td>
+    <td></td>
+    </tr>
+    <?php
+}
+?>
+</table>
+<h4><a href="UserShoppingCart.php">&gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt; &gt;   Proced to next step</a></h4>
+</div>
+</div>
+</body>
+</html>
+<?php
+mysql_free_result($user);
+?>
